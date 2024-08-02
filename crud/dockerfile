@@ -1,0 +1,25 @@
+FROM node:14-alpine
+
+# Establece el directorio de trabajo en /app
+WORKDIR /app
+
+# Copia los archivos package.json y package-lock.json al directorio de trabajo
+COPY package*.json ./
+
+# Instala las dependencias del proyecto
+RUN npm install
+
+# Copia todo el contenido del proyecto al directorio de trabajo
+COPY . .
+
+# Construye la aplicación para producción
+RUN npm run build
+
+# Instala un servidor HTTP simple para servir tu aplicación estática
+RUN npm install -g serve
+
+# Expone el puerto en el que se ejecutará la aplicación
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación
+CMD ["serve", "-s", "dist", "-l", "8080"]
